@@ -1,16 +1,26 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:fintrack/core/enums/transaction_type.dart';
-import 'package:fintrack/domain/usecases/add_transaction.dart';
+import 'package:fintrack/domain/entities/transaction.dart';
 import 'package:fintrack/presentation/screens/add_transaction/bloc/add_transaction_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../dashboard/bloc/transaction_bloc_test.mocks.dart';
 
-@GenerateMocks([AddTransaction])
 void main() {
   group('AddTransactionBloc', () {
+    final fakeTransaction = Transaction(
+      id: '1',
+      title: 'Café',
+      amount: 10.0,
+      type: TransactionType.expense,
+      date: DateTime(2026, 1, 1),
+    );
+
+    setUpAll(() {
+      registerFallbackValue(fakeTransaction);
+    });
+
     late MockAddTransaction mockAddTransaction;
 
     setUp(() {
@@ -29,7 +39,11 @@ void main() {
       act: (bloc) => bloc.add(const AddTransactionLoad()),
       expect: () => [
         isA<AddTransactionLoaded>()
-            .having((s) => s.transactionType, 'transactionType', TransactionType.income)
+            .having(
+              (s) => s.transactionType,
+              'transactionType',
+              TransactionType.income,
+            )
             .having((s) => s.title, 'title', '')
             .having((s) => s.amount, 'amount', '')
             .having((s) => s.date, 'date', isNotNull),
@@ -39,10 +53,14 @@ void main() {
     blocTest<AddTransactionBloc, AddTransactionState>(
       'emite AddTransactionLoaded ao receber AddTransactionToggle',
       build: buildBloc,
-      act: (bloc) => bloc.add(const AddTransactionToggle(TransactionType.expense)),
+      act: (bloc) =>
+          bloc.add(const AddTransactionToggle(TransactionType.expense)),
       expect: () => [
-        isA<AddTransactionLoaded>()
-            .having((s) => s.transactionType, 'transactionType', TransactionType.expense),
+        isA<AddTransactionLoaded>().having(
+          (s) => s.transactionType,
+          'transactionType',
+          TransactionType.expense,
+        ),
       ],
     );
 
@@ -51,8 +69,11 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(const AddTransactionTitle('Nova Transação')),
       expect: () => [
-        isA<AddTransactionLoaded>()
-            .having((s) => s.title, 'title', 'Nova Transação'),
+        isA<AddTransactionLoaded>().having(
+          (s) => s.title,
+          'title',
+          'Nova Transação',
+        ),
       ],
     );
 
@@ -61,8 +82,7 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(const AddTransactionAmount('1000')),
       expect: () => [
-        isA<AddTransactionLoaded>()
-            .having((s) => s.amount, 'amount', '1000'),
+        isA<AddTransactionLoaded>().having((s) => s.amount, 'amount', '1000'),
       ],
     );
 
@@ -72,8 +92,7 @@ void main() {
       build: buildBloc,
       act: (bloc) => bloc.add(AddTransactionDate(date)),
       expect: () => [
-        isA<AddTransactionLoaded>()
-            .having((s) => s.date, 'date', date),
+        isA<AddTransactionLoaded>().having((s) => s.date, 'date', date),
       ],
     );
 
@@ -97,7 +116,7 @@ void main() {
       'emite [AddTransactionSaving, AddTransactionSaved] com sucesso no submit',
       build: buildBloc,
       setUp: () {
-        when(mockAddTransaction.call(any)).thenAnswer((_) async {});
+        when(() => mockAddTransaction.call(any())).thenAnswer((_) async {});
       },
       act: (bloc) async {
         bloc.add(const AddTransactionTitle('Café'));
@@ -106,12 +125,20 @@ void main() {
       },
       expect: () => [
         isA<AddTransactionLoaded>().having((s) => s.title, 'title', 'Café'),
-        isA<AddTransactionLoaded>().having((s) => s.amount, 'amount', 'R\$ 10,00'),
+        isA<AddTransactionLoaded>().having(
+          (s) => s.amount,
+          'amount',
+          'R\$ 10,00',
+        ),
         isA<AddTransactionSaving>(),
-        isA<AddTransactionSaved>().having((s) => s.titleError, 'titleError', null), 
+        isA<AddTransactionSaved>().having(
+          (s) => s.titleError,
+          'titleError',
+          null,
+        ),
       ],
       verify: (_) {
-        verify(mockAddTransaction.call(any)).called(1);
+        verify(() => mockAddTransaction.call(any())).called(1);
       },
     );
   });

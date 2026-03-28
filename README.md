@@ -71,3 +71,6 @@ flutter test
 ---
 
 *Desenvolvido com dedicação para gerenciar suas finanções de forma inteligente.*
+
+Link do repositorio: https://github.com/LeonardoBays/FinTrack
+Link do youtube: 

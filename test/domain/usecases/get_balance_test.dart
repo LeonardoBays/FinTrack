@@ -1,14 +1,11 @@
 import 'package:fintrack/core/enums/transaction_type.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:fintrack/domain/entities/transaction.dart';
-import 'package:fintrack/domain/repositories/transaction_repository.dart';
 import 'package:fintrack/domain/usecases/get_balance.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 import 'get_balance_test.mocks.dart';
 
-@GenerateMocks([TransactionRepository])
 void main() {
   group('GetBalance UseCase', () {
     late MockTransactionRepository mockRepository;
@@ -44,8 +41,9 @@ void main() {
         ),
       ];
 
-      when(mockRepository.getTransactions())
-          .thenAnswer((_) async => transactions);
+      when(
+        () => mockRepository.getTransactions(),
+      ).thenAnswer((_) async => transactions);
 
       final balance = await useCase();
 
@@ -54,7 +52,7 @@ void main() {
     });
 
     test('deve retornar zero para lista vazia', () async {
-      when(mockRepository.getTransactions()).thenAnswer((_) async => []);
+      when(() => mockRepository.getTransactions()).thenAnswer((_) async => []);
 
       final balance = await useCase();
 
@@ -72,8 +70,9 @@ void main() {
         ),
       ];
 
-      when(mockRepository.getTransactions())
-          .thenAnswer((_) async => transactions);
+      when(
+        () => mockRepository.getTransactions(),
+      ).thenAnswer((_) async => transactions);
 
       final balance = await useCase();
 
@@ -91,8 +90,9 @@ void main() {
         ),
       ];
 
-      when(mockRepository.getTransactions())
-          .thenAnswer((_) async => transactions);
+      when(
+        () => mockRepository.getTransactions(),
+      ).thenAnswer((_) async => transactions);
 
       final balance = await useCase();
 

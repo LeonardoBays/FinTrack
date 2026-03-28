@@ -1,14 +1,11 @@
 import 'package:fintrack/core/enums/transaction_type.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:fintrack/domain/entities/transaction.dart';
-import 'package:fintrack/domain/repositories/transaction_repository.dart';
 import 'package:fintrack/domain/usecases/get_transactions.dart';
 
 import 'get_transactions_test.mocks.dart';
 
-@GenerateMocks([TransactionRepository])
 void main() {
   group('GetTransactions UseCase', () {
     late MockTransactionRepository mockRepository;
@@ -37,18 +34,18 @@ void main() {
     });
 
     test('deve retornar a lista de transações do repositório', () async {
-      when(mockRepository.getTransactions())
+      when(() => mockRepository.getTransactions())
           .thenAnswer((_) async => fakeTransactions);
 
       final result = await useCase();
 
       expect(result, equals(fakeTransactions));
       expect(result.length, equals(2));
-      verify(mockRepository.getTransactions()).called(1);
+      verify(() => mockRepository.getTransactions()).called(1);
     });
 
     test('deve retornar lista vazia quando não há transações', () async {
-      when(mockRepository.getTransactions()).thenAnswer((_) async => []);
+      when(() => mockRepository.getTransactions()).thenAnswer((_) async => []);
 
       final result = await useCase();
 

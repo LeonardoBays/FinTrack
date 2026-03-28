@@ -18,7 +18,6 @@ void main() {
     late SqliteTransactionRepository repository;
 
     setUp(() async {
-      // Cria um banco na memória (in-memory) apra não sujar o sistema de arquivos
       db = await databaseFactory.openDatabase(inMemoryDatabasePath,
           options: OpenDatabaseOptions(
             version: 1,
@@ -35,13 +34,6 @@ void main() {
             },
           ));
 
-      // Um mock rápido substituindo apenas a prop "database" no helper não é fácil porque o DatabaseHelper 
-      // chama database internamente e nós queremos isolar no repository de verdade.
-      // E é melhor testar a integração real entre Repository <-> Database
-      // Portanto passaremos uma fake implementation ou substituiremos direto no repo test setup, mas o mais simples 
-      // é simular o helper ou usar a FFI.
-      
-      // Aqui usamos uma classe helper falsa para injetar
       mockDbHelper = _FakeDatabaseHelper(db);
       repository = SqliteTransactionRepository(mockDbHelper);
     });
