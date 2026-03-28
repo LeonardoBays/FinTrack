@@ -21,7 +21,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this.getBalance,
   }) : super(const TransactionInitial()) {
     on<LoadTransactions>(_onLoadTransactions);
-    on<AddTransactionEvent>(_onAddTransaction);
   }
 
   /// Carrega todos as transações e calcula os totais
@@ -46,19 +45,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       );
     } catch (e) {
       emit(TransactionError('Erro ao carregar transações: ${e.toString()}'));
-    }
-  }
-
-  /// Adiciona uma transação e recarrega a lista atualizada
-  Future<void> _onAddTransaction(
-    AddTransactionEvent event,
-    Emitter<TransactionState> emit,
-  ) async {
-    try {
-      await addTransaction(event.transaction);
-      add(const LoadTransactions());
-    } catch (e) {
-      emit(TransactionError('Erro ao adicionar transação: ${e.toString()}'));
     }
   }
 

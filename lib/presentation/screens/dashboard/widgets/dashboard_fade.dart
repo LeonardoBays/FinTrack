@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/transaction_bloc.dart';
 
 class DashboardFade extends StatefulWidget {
   const DashboardFade({super.key, required this.child});
@@ -12,8 +10,7 @@ class DashboardFade extends StatefulWidget {
 }
 
 class _DashboardFadeState extends State<DashboardFade>
-    with SingleTickerProviderStateMixin{
-
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
 
@@ -29,7 +26,7 @@ class _DashboardFadeState extends State<DashboardFade>
       curve: Curves.easeInOut,
     );
     _controller.forward();
-    context.read<TransactionBloc>().add(const LoadTransactions());
+    // context.read<TransactionBloc>().add(const LoadTransactions());
   }
 
   @override
@@ -40,9 +37,6 @@ class _DashboardFadeState extends State<DashboardFade>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: widget.child,
-    );
+    return FadeTransition(opacity: _fadeAnimation, child: widget.child);
   }
 }

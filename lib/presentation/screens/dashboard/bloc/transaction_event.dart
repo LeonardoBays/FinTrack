@@ -12,13 +12,3 @@ abstract class TransactionEvent extends Equatable {
 class LoadTransactions extends TransactionEvent {
   const LoadTransactions();
 }
-
-/// Solicita a adição de uma nova transação
-class AddTransactionEvent extends TransactionEvent {
-  final Transaction transaction;
-
-  const AddTransactionEvent(this.transaction);
-
-  @override
-  List<Object?> get props => [transaction];
-}

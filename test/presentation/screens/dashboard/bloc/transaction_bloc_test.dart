@@ -81,28 +81,6 @@ void main() {
     );
 
     blocTest<TransactionBloc, TransactionState>(
-      'emite [TransactionLoading, TransactionLoaded] após adicionar transação',
-      build: buildBloc,
-      setUp: () {
-        when(mockGetTransactions()).thenAnswer((_) async => fakeTransactions);
-        when(mockGetBalance()).thenAnswer((_) async => 2000.0);
-        when(mockAddTransaction(any)).thenAnswer((_) async {});
-      },
-      act: (bloc) => bloc.add(
-        AddTransactionEvent(
-          Transaction(
-            id: '99',
-            title: 'Bônus',
-            amount: 500,
-            type: TransactionType.income,
-            date: DateTime(2026, 2, 1),
-          ),
-        ),
-      ),
-      expect: () => [const TransactionLoading(), isA<TransactionLoaded>()],
-    );
-
-    blocTest<TransactionBloc, TransactionState>(
       'emite [TransactionError] quando getTransactions lança exceção',
       build: buildBloc,
       setUp: () {

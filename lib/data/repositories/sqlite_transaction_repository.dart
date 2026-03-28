@@ -6,13 +6,13 @@ import '../models/transaction_model.dart';
 
 /// Repositório concreto usando SQlite como banco de dados local.
 class SqliteTransactionRepository implements TransactionRepository {
-  final DatabaseHelper dbHelper;
+  final DatabaseHelper _dbHelper;
 
-  SqliteTransactionRepository(this.dbHelper);
+  SqliteTransactionRepository(this._dbHelper);
 
   @override
   Future<List<Transaction>> getTransactions() async {
-    final db = await dbHelper.database;
+    final db = await _dbHelper.database;
     final maps = await db.query(
       'transactions',
       orderBy: 'date DESC',
@@ -23,7 +23,7 @@ class SqliteTransactionRepository implements TransactionRepository {
 
   @override
   Future<void> addTransaction(Transaction transaction) async {
-    final db = await dbHelper.database;
+    final db = await _dbHelper.database;
     final transactionModel = TransactionModel(
       id: transaction.id,
       title: transaction.title,
@@ -41,7 +41,7 @@ class SqliteTransactionRepository implements TransactionRepository {
 
   @override
   Future<void> deleteTransaction(String id) async {
-    final db = await dbHelper.database;
+    final db = await _dbHelper.database;
     await db.delete(
       'transactions',
       where: 'id = ?',

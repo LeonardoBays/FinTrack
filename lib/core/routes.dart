@@ -1,3 +1,4 @@
+import 'package:fintrack/presentation/screens/dashboard/bloc/transaction_bloc.dart';
 import 'package:fintrack/presentation/screens/transaction_detail/bloc/transaction_detail_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -30,13 +31,14 @@ class Routes {
     final appRoute = AppRoutes.fromName(settings.name);
 
     final Widget screen = switch (appRoute) {
-      AppRoutes.dashboard => DashboardScreen(),
+      AppRoutes.dashboard => DashboardScreen(
+        transactionBloc: injector.getIt.get<TransactionBloc>(),
+      ),
       AppRoutes.transactionDetail => TransactionDetailScreen(
         transactionDetailBloc: injector.getIt.get<TransactionDetailBloc>(),
         transaction: settings.arguments as Transaction,
       ),
       AppRoutes.addTransaction => AddTransactionScreen(
-
         addTransactionBloc: injector.getIt.get<AddTransactionBloc>(),
       ),
     };
